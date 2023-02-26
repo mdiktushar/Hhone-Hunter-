@@ -16,7 +16,6 @@ const displayPhones = (phones, dataLimit) => {
   } else {
     showAll.classList.add("d-none");
   }
-
   //No Phone found
   const noPhone = document.getElementById("no-phone").classList;
   !phones.length ? noPhone.remove("d-none") : noPhone.add("d-none");
@@ -34,6 +33,7 @@ const displayPhones = (phones, dataLimit) => {
             </p>
             <h6>Brane: ${phone.brand}</h6>
             </div>
+            <a onClick="loadPhoneDetails('${phone.slug}')" class="btn btn-primary">Show Details</a>
         </div>
         `;
     phonesContainer.appendChild(phoneDiv);
@@ -51,9 +51,17 @@ const processSearch = dataLimit => {
     loadPhones(searchText, dataLimit);
 }
 
+// Button search key
 document.getElementById("btn-search").addEventListener("click", () => {
  processSearch(10)
 });
+
+// search input field enter key handler
+document.getElementById('search-field').addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    processSearch(10)
+  }
+})
 
 const toggleSpinner = (isLoading) => {
   const loader = document.getElementById("loader");
@@ -65,3 +73,11 @@ const toggleSpinner = (isLoading) => {
 document.getElementById('btn-show-all').addEventListener('click', () => {
   processSearch()
 })
+
+
+const loadPhoneDetails = async(id) => {
+  const url = `https://openapi.programming-hero.com/api/phone/${id}`
+  const Response = await fetch(url);
+  const data = await Response.json()
+  console.log(data);
+}
